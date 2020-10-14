@@ -11,7 +11,7 @@ class ChessClient extends React.Component {
       currPiece: "",
     }
     this.onSquareClick = this.onSquareClick.bind(this);
-    this.socket = io("https://hand-brain-chess-server.herokuapp.com/");
+    this.socket = io("https://hand-brain-chess-server.azurewebsites.net");
   }
 
   componentDidMount() {
