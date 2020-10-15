@@ -11,14 +11,11 @@ class ChessClient extends React.Component {
       currPiece: "",
     }
     this.onSquareClick = this.onSquareClick.bind(this);
-    this.socket = io("https://hand-brain-chess-server.azurewebsites.net");
+    this.socket = io(process.env.REACT_APP_SERVER_URL);
   }
 
   componentDidMount() {
-    // TODO: Retrieve the game from the server
-    //this.game = new Chess();
     this.socket.on("position", position => {
-      console.log(position);
       this.setState({
         position: position,
         currPiece: ""
@@ -41,7 +38,6 @@ class ChessClient extends React.Component {
           <Chessboard
             position={this.state.position}
             draggable={false}
-            onPieceClick={this.onPieceClick}
             onSquareClick={this.onSquareClick}
           />
         </div>

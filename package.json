@@ -16,7 +16,7 @@
   "scripts": {
     "start": "npx serve -s build",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "REACT_APP_SERVER_URL=http://localhost:8000 react-scripts start",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
