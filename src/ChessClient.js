@@ -11,10 +11,11 @@ class ChessClient extends React.Component {
       currPiece: "",
     }
     this.onSquareClick = this.onSquareClick.bind(this);
-    this.socket = io(process.env.REACT_APP_SERVER_URL);
+    this.connect();
   }
 
-  componentDidMount() {
+  connect() {
+    this.socket = io(process.env.REACT_APP_SERVER_URL);
     this.socket.on("position", position => {
       this.setState({
         position: position,
