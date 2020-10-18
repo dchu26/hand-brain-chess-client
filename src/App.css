@@ -1,3 +1,14 @@
-.header {
-  text-align: center;
+.centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.child {
+  flex-grow: 1;
+}
+
+.play {
+  font-size: 20em;
 }

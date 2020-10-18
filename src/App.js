@@ -1,19 +1,28 @@
 import React from "react";
 import "./App.css";
-import ChessClient from "./ChessClient";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+import Home from "./pages/Home";
+import Room from "./pages/Room";
 
-function App() {
-  return (
-    <div>
-      <h1 className={"header"}>
-        The client (left) should match the server (right).
-      </h1>
-      <ChessClient></ChessClient>
-      <h1 className={"header"}>
-        Move the pieces on the client board.
-      </h1>
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Home></Home>
+          </Route>
+          <Route path="/">
+            <Room></Room>
+          </Route>
+        </Switch>
+      </Router>
+    );
+  }
 }
 
 export default App;

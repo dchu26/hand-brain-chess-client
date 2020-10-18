@@ -1,7 +1,7 @@
 import React from "react";
 import Chessboard from "chessboardjsx";
-import io from "socket.io-client";
 import "./ChessClient.css";
+import socket from "./socket";
 
 class ChessClient extends React.Component {
   constructor(props) {
@@ -9,15 +9,16 @@ class ChessClient extends React.Component {
     this.state = {
       position: "start",
       currPiece: "",
+      isConnected: false
     }
     this.onSquareClick = this.onSquareClick.bind(this);
-    this.connect();
+    this.configureSocket();
   }
 
-  connect() {
-    this.socket = io(process.env.REACT_APP_SERVER_URL);
-    this.socket.on("position", position => {
+  configureSocket() {
+    socket.on("position", position => {
       this.setState({
+        isConnected: true,
         position: position,
         currPiece: ""
       });
@@ -29,24 +30,22 @@ class ChessClient extends React.Component {
       currPiece: square
     });
     let move = {from: this.state.currPiece, to: square, promotion: "q"};
-    this.socket.emit("move", move);
+    socket.emit("move", move);
   }
 
   render() {
+    let board;
+    if (this.state.isConnected) {
+      board = <Chessboard
+      position={this.state.position}
+      draggable={false}
+      onSquareClick={this.onSquareClick}
+    />
+    }
     return (
       <div className="ChessClient">
         <div className="chessboard">
-          <Chessboard
-            position={this.state.position}
-            draggable={false}
-            onSquareClick={this.onSquareClick}
-          />
-        </div>
-        <div className="chessboard">
-          <Chessboard
-            position={this.state.position}
-            draggable={false}
-          />
+          {board}
         </div>
       </div>
     );
