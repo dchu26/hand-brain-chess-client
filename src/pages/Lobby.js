@@ -5,7 +5,7 @@ class Lobby extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      players: new Map()
+      players: {}
     };
     this.configureSocket();
   }
@@ -19,18 +19,22 @@ class Lobby extends React.Component {
     });
   }
 
+  chooseRole(role) {
+    socket.emit("chooseRole", role);
+  }
+
   render() {
     return (
       <div>
         <div>
           <h1>White</h1>
-          <h2>Brain</h2>
-          <h2>Hand</h2>
+          <button onClick={() => this.chooseRole(0)}>Brain</button>
+          <button onClick={() => this.chooseRole(1)}>Hand</button>
         </div>
         <div>
           <h1>Black</h1>
-          <h2>Brain</h2>
-          <h2>Hand</h2>
+          <button onClick={() => this.chooseRole(2)}>Brain</button>
+          <button onClick={() => this.chooseRole(3)}>Hand</button>
         </div>
       </div>
     );

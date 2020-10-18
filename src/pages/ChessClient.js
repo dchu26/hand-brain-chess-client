@@ -1,6 +1,6 @@
 import React from "react";
 import Chessboard from "chessboardjsx";
-import "./ChessClient.css";
+import "../styles/ChessClient.css";
 import socket from "./socket";
 
 class ChessClient extends React.Component {

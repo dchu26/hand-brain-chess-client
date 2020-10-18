@@ -1,7 +1,7 @@
 import React from "react";
 import socket from "../socket";
 import Lobby from "./Lobby";
-import ChessClient from "../ChessClient";
+import ChessClient from "./ChessClient";
 
 class Room extends React.Component {
   constructor(props) {
