@@ -7,7 +7,7 @@ class ChessClient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      position: "start",
+      boardState: {position: "", squares: {}, player: -1, gameState: ""},
       currPiece: "",
       isConnected: false,
       squareStyles: {}
@@ -20,8 +20,8 @@ class ChessClient extends React.Component {
     socket.emit("getBoard");
     socket.on("board", boardState => {
       this.setState({
+        boardState: boardState,
         isConnected: true,
-        position: boardState.position,
         currPiece: "",
         squareStyles: this.getSquareStyles(boardState.squares)
       });
@@ -30,8 +30,12 @@ class ChessClient extends React.Component {
 
   getSquareStyles(squares) {
     let squareStyles = {};
+    let style = {backgroundColor: "green"};
+    if (this.state.boardState.player == 0 || this.state.boardState.player == 2) {
+      style = {backgroundColor: "yellow"};
+    }
     for (let square of squares) {
-      squareStyles[square] = {backgroundColor: "green"};
+      squareStyles[square] = style;
     }
     return squareStyles;
   }
@@ -48,7 +52,7 @@ class ChessClient extends React.Component {
     let board;
     if (this.state.isConnected) {
       board = <Chessboard
-        position={this.state.position}
+        position={this.state.boardState.position}
         draggable={false}
         onSquareClick={this.onSquareClick}
         squareStyles={this.state.squareStyles}
