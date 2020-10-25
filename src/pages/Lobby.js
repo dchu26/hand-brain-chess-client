@@ -65,6 +65,10 @@ class Lobby extends React.Component {
           <button onClick={() => this.chooseRole(3)}>Hand</button>
           {lists[3]}
         </div>
+        <div>Share this link with your friends</div>
+        <a href={window.location.hostname + window.location.pathname}>
+          {window.location.hostname + window.location.pathname}
+        </a>
       </div>
     );
   }
