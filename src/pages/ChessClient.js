@@ -48,6 +48,10 @@ class ChessClient extends React.Component {
     socket.emit("move", move);
   }
 
+  reset(type) {
+    socket.emit("reset" + type);
+  }
+
   render() {
     let board;
     if (this.state.isConnected) {
@@ -63,6 +67,11 @@ class ChessClient extends React.Component {
         <div className="chessboard">
           {board}
         </div>
+        {this.state.boardState.isOver && 
+        <div>
+          <button onClick={() => this.reset("Game")}>Reset Game</button>
+          <button onClick={() => this.reset("Lobby")}>Reset Lobby</button>
+        </div>}
       </div>
     );
   }
