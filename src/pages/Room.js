@@ -15,8 +15,11 @@ class Room extends React.Component {
   configureSocket() {
     socket.emit("login", localStorage.getItem("userId"));
 
-    socket.on("loggedIn", userId => {
-      localStorage.setItem("userId", userId);
+    socket.on("loggedIn", userInfo => {
+      localStorage.setItem("userId", userInfo.userId);
+      if (localStorage.getItem("userName") === null) {
+        localStorage.setItem("userName", userInfo.name);
+      }
       socket.emit("joinRoom", window.location.pathname);
     });
 

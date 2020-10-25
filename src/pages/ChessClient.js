@@ -31,7 +31,7 @@ class ChessClient extends React.Component {
   getSquareStyles(squares) {
     let squareStyles = {};
     let style = {backgroundColor: "green"};
-    if (this.state.boardState.player == 0 || this.state.boardState.player == 2) {
+    if (this.state.boardState.player === 0 || this.state.boardState.player === 2) {
       style = {backgroundColor: "yellow"};
     }
     for (let square of squares) {

@@ -1,0 +1,9 @@
+button:focus {
+  background-color: yellow;
+  outline: green auto 10px;
+}
+
+.button:focus {
+  background-color: yellow;
+  outline: green auto 10px;
+}
