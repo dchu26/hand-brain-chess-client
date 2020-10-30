@@ -1,9 +1,11 @@
-button:focus {
-  background-color: yellow;
-  outline: green auto 10px;
+.lobby {
+  text-align: center;
 }
 
-.button:focus {
-  background-color: yellow;
-  outline: green auto 10px;
+.header {
+  font-size: 5em;
+}
+
+.piece {
+  font-size: 3rem;
 }
