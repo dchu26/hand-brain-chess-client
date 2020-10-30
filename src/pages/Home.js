@@ -33,9 +33,9 @@ class Home extends React.Component {
           <Col className="rules">
             <h2>Rules</h2>
             <p>Each team contains 2 players: 1 hand and 1 brain.</p>
-            <p>Each turn, the brain makes a move using a piece. The type of piece they chose is highlighted yellow.</p>
+            <p>Each turn, the brain makes a move using a piece. The type of piece they chose is highlighted purple.</p>
             <p>The team's hand must move a highlighted piece. Their move determines the actual move their side makes.</p>
-            <p>The hand and brain can't tell each other what move to make!</p>
+            <p>The hand and brain can't tell each other what move to make.</p>
           </Col>
         </Row>
         <Row>
