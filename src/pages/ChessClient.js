@@ -5,7 +5,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import "../styles/ChessClient.css"
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import "../styles/ChessClient.css";
 
 class ChessClient extends React.Component {
   constructor(props) {
@@ -16,7 +17,8 @@ class ChessClient extends React.Component {
       isConnected: false,
       squareStyles: {},
       orientation: "white",
-      role: -1
+      role: -1,
+      options: []
     }
     this.onSquareClick = this.onSquareClick.bind(this);
     this.configureSocket();
@@ -24,11 +26,21 @@ class ChessClient extends React.Component {
 
   configureSocket() {
     socket.emit("getBoard");
+    socket.on("options", options => {
+      let squareStyles = this.getSquareStyles(this.state.boardState.squares, this.state.boardState.player, this.state.boardState.checkSquare);
+      for (let option of options) {
+        squareStyles[option.to] = 
+        {background: "radial-gradient(circle, forestgreen 36%, transparent 40%)"}
+      }
+      this.setState({
+        options: options,
+        squareStyles: squareStyles
+      })
+    });
     socket.on("board", boardState => {
-      let squareStyles = this.getSquareStyles(boardState.squares, boardState.player);
+      let squareStyles = this.getSquareStyles(boardState.squares, boardState.player, boardState.checkSquare);
       let role = this.state.role === -1 ? boardState.players.find(e => e[0] === localStorage.getItem("userId")) : this.state.role;
       let orientation = role !== undefined && (role[1] === 2 || role[1] === 3) ? "black" : "white";
-      console.log(role);
       this.setState({
         boardState: boardState,
         isConnected: true,
@@ -61,7 +73,7 @@ class ChessClient extends React.Component {
     return name;
   }
 
-  getSquareStyles(squares, player) {
+  getSquareStyles(squares, player, checkSquare) {
     let squareStyles = {};
     let style;
     if (player === 1 || player === 3) {
@@ -73,6 +85,7 @@ class ChessClient extends React.Component {
     for (let square of squares) {
       squareStyles[square] = style;
     }
+    squareStyles[checkSquare] = {backgroundColor: "indianred"};
     return squareStyles;
   }
 
@@ -80,6 +93,7 @@ class ChessClient extends React.Component {
     this.setState({
       currPiece: square
     });
+    socket.emit("getOptions", square);
     let move = {from: this.state.currPiece, to: square, promotion: "q"};
     socket.emit("move", move);
   }
@@ -97,7 +111,7 @@ class ChessClient extends React.Component {
     if (this.state.isConnected) {
       board = <Chessboard
         position={this.state.boardState.position}
-        draggable={false}
+        draggable={true}
         onSquareClick={this.onSquareClick}
         squareStyles={this.state.squareStyles}
         orientation={this.state.orientation}
@@ -117,17 +131,11 @@ class ChessClient extends React.Component {
           <Col>{board}</Col>
           <Col>
             {this.state.boardState.isOver && 
-              <div>
-                <div>
-                  <Button onClick={() => this.reset("Game")}>Reset Game</Button>
-                </div>
-                <div>
-                  <Button onClick={() => this.reset("Lobby")}>Reset Lobby</Button>
-                </div>
-                <div>
-                  <Button onClick={this.newLobby}>New Lobby</Button>
-                </div>
-              </div>
+              <ButtonGroup vertical>
+                <Button className="button" onClick={() => this.reset("Game")}>Reset Game</Button>
+                <Button className="button" onClick={() => this.reset("Lobby")}>Reset Lobby</Button>
+                <Button className="button" onClick={this.newLobby}>New Lobby</Button>
+              </ButtonGroup>
             }
           </Col>
         </Row>
