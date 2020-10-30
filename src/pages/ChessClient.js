@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import "../styles/ChessClient.css"
 
 class ChessClient extends React.Component {
   constructor(props) {
@@ -14,6 +15,8 @@ class ChessClient extends React.Component {
       currPiece: "",
       isConnected: false,
       squareStyles: {},
+      orientation: "white",
+      role: -1
     }
     this.onSquareClick = this.onSquareClick.bind(this);
     this.configureSocket();
@@ -23,23 +26,49 @@ class ChessClient extends React.Component {
     socket.emit("getBoard");
     socket.on("board", boardState => {
       let squareStyles = this.getSquareStyles(boardState.squares, boardState.player);
+      let role = this.state.role === -1 ? boardState.players.find(e => e[0] === localStorage.getItem("userId")) : this.state.role;
+      let orientation = role !== undefined && (role[1] === 2 || role[1] === 3) ? "black" : "white";
+      console.log(role);
       this.setState({
         boardState: boardState,
         isConnected: true,
         currPiece: "",
-        squareStyles: squareStyles
+        squareStyles: squareStyles,
+        role: role,
+        orientation: orientation
       });
     });
+  }
+
+  toRole(role) {
+    let name = "Spectator";
+    switch (role) {
+      case 0:
+        name = "White Brain";
+        break;
+      case 1:
+        name = "White Hand";
+        break;
+      case 2:
+        name = "Black Brain";
+        break;
+      case 3:
+        name = "Black Hand";
+        break;
+      default:
+        name = "Spectator";
+    }
+    return name;
   }
 
   getSquareStyles(squares, player) {
     let squareStyles = {};
     let style;
     if (player === 1 || player === 3) {
-      style = {backgroundColor: "yellow"};
+      style = {backgroundColor: "plum"};
     }
     else if (player === 0 || player === 2) {
-      style = {backgroundColor: "green"};
+      style = {backgroundColor: "forestgreen"};
     }
     for (let square of squares) {
       squareStyles[square] = style;
@@ -59,6 +88,10 @@ class ChessClient extends React.Component {
     socket.emit("reset" + type);
   }
 
+  newLobby() {
+    socket.emit("createRoom");
+  }
+
   render() {
     let board;
     if (this.state.isConnected) {
@@ -67,25 +100,42 @@ class ChessClient extends React.Component {
         draggable={false}
         onSquareClick={this.onSquareClick}
         squareStyles={this.state.squareStyles}
-        sparePieces={true}
+        orientation={this.state.orientation}
       />
     }
     return (
-      <Container>
-        <Row>
-          <Col>White Hand's Turn</Col>
+      <Container fluid className="vh-100 d-flex flex-column">
+        <Row className="h-20">
+          <Col>
+            <p className="text">
+              {this.toRole(this.state.boardState.player)}'s Turn
+            </p>
+          </Col>
         </Row>
-        <Row>
+        <Row className="">
           <Col></Col>
           <Col>{board}</Col>
           <Col>
             {this.state.boardState.isOver && 
               <div>
-                <Button onClick={() => this.reset("Game")}>Reset Game</Button>
-                <span> </span>
-                <Button onClick={() => this.reset("Lobby")}>Reset Lobby</Button>
+                <div>
+                  <Button onClick={() => this.reset("Game")}>Reset Game</Button>
+                </div>
+                <div>
+                  <Button onClick={() => this.reset("Lobby")}>Reset Lobby</Button>
+                </div>
+                <div>
+                  <Button onClick={this.newLobby}>New Lobby</Button>
+                </div>
               </div>
             }
+          </Col>
+        </Row>
+        <Row className="h-10">
+          <Col>
+            <p className="text">
+              Your Role: {this.toRole(this.state.role[1])}
+            </p>
           </Col>
         </Row>
       </Container>

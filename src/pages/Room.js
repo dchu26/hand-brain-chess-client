@@ -2,6 +2,9 @@ import React from "react";
 import socket from "../socket";
 import Lobby from "./Lobby";
 import ChessClient from "./ChessClient";
+import {
+  withRouter
+} from "react-router-dom";
 
 class Room extends React.Component {
   constructor(props) {
@@ -34,6 +37,11 @@ class Room extends React.Component {
         phase: "game"
       });
     });
+
+    socket.on("createdRoom", roomId => {
+      this.props.history.push(roomId);
+      socket.emit("joinRoom", window.location.pathname);
+    })
   }
 
   render() {
@@ -46,4 +54,4 @@ class Room extends React.Component {
   }
 }
 
-export default Room;
+export default withRouter(Room);
