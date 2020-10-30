@@ -1,16 +1,19 @@
 import React from "react";
 import Chessboard from "chessboardjsx";
-import "../styles/ChessClient.css";
 import socket from "../socket";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 
 class ChessClient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      boardState: {position: "", squares: {}, player: -1, gameState: ""},
+      boardState: {position: "", squares: {}, player: -1, isOver: false},
       currPiece: "",
       isConnected: false,
-      squareStyles: {}
+      squareStyles: {},
     }
     this.onSquareClick = this.onSquareClick.bind(this);
     this.configureSocket();
@@ -19,20 +22,24 @@ class ChessClient extends React.Component {
   configureSocket() {
     socket.emit("getBoard");
     socket.on("board", boardState => {
+      let squareStyles = this.getSquareStyles(boardState.squares, boardState.player);
       this.setState({
         boardState: boardState,
         isConnected: true,
         currPiece: "",
-        squareStyles: this.getSquareStyles(boardState.squares)
+        squareStyles: squareStyles
       });
     });
   }
 
-  getSquareStyles(squares) {
+  getSquareStyles(squares, player) {
     let squareStyles = {};
-    let style = {backgroundColor: "green"};
-    if (this.state.boardState.player === 1 || this.state.boardState.player === 3) {
+    let style;
+    if (player === 1 || player === 3) {
       style = {backgroundColor: "yellow"};
+    }
+    else if (player === 0 || player === 2) {
+      style = {backgroundColor: "green"};
     }
     for (let square of squares) {
       squareStyles[square] = style;
@@ -60,19 +67,28 @@ class ChessClient extends React.Component {
         draggable={false}
         onSquareClick={this.onSquareClick}
         squareStyles={this.state.squareStyles}
+        sparePieces={true}
       />
     }
     return (
-      <div className="ChessClient">
-        <div className="chessboard">
-          {board}
-        </div>
-        {this.state.boardState.isOver && 
-        <div>
-          <button onClick={() => this.reset("Game")}>Reset Game</button>
-          <button onClick={() => this.reset("Lobby")}>Reset Lobby</button>
-        </div>}
-      </div>
+      <Container>
+        <Row>
+          <Col>White Hand's Turn</Col>
+        </Row>
+        <Row>
+          <Col></Col>
+          <Col>{board}</Col>
+          <Col>
+            {this.state.boardState.isOver && 
+              <div>
+                <Button onClick={() => this.reset("Game")}>Reset Game</Button>
+                <span> </span>
+                <Button onClick={() => this.reset("Lobby")}>Reset Lobby</Button>
+              </div>
+            }
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
