@@ -41,7 +41,7 @@ class Lobby extends React.Component {
           lists[i] += i === 0 || i === 1 ? "♔" : "♚";
         }
         else {
-          lists[i] += i === 2 || i === 3 ? "♙" : "♟";
+          lists[i] += i === 0 || i === 1 ? "♘" : "♞";
         }
         if (lists[i].length === 1) {
           b[i] = "success";
@@ -60,7 +60,7 @@ class Lobby extends React.Component {
   copy() {
     let link = document.getElementById("link");
     link.focus();
-    let url = window.location.hostname + window.location.pathname;
+    let url = "https://" + window.location.hostname + window.location.pathname;
     navigator.clipboard.writeText(url);
   }
 
@@ -115,8 +115,8 @@ class Lobby extends React.Component {
             <Row><Col><p className="header">Share This Room</p></Col></Row>
             <Row>
               <Col className="w-75">
-                <a id="link" href={window.location.hostname + window.location.pathname}>
-                  {window.location.hostname + window.location.pathname}
+                <a id="link" href={"https://" + window.location.hostname + window.location.pathname}>
+                  {"https://" + window.location.hostname + window.location.pathname}
                 </a>
                 <span> </span>
                 <Button onClick={this.copy}>Copy</Button>
