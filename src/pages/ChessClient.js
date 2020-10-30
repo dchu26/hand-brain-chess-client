@@ -111,7 +111,7 @@ class ChessClient extends React.Component {
     if (this.state.isConnected) {
       board = <Chessboard
         position={this.state.boardState.position}
-        draggable={true}
+        draggable={false}
         onSquareClick={this.onSquareClick}
         squareStyles={this.state.squareStyles}
         orientation={this.state.orientation}
