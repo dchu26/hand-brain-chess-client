@@ -10,7 +10,9 @@ class Lobby extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      players: []
+      players: [],
+      buttons: ["secondary", "secondary", "secondary", "secondary"],
+      lists: []
     };
     this.configureSocket();
   }
@@ -18,10 +20,7 @@ class Lobby extends React.Component {
   configureSocket() {
     socket.emit("getLobby");
     socket.on("lobby", players => {
-      console.log(players);
-      this.setState({
-        players: players
-      });
+      this.getRoles(players);
     });
   }
 
@@ -29,8 +28,8 @@ class Lobby extends React.Component {
     socket.emit("chooseRole", role);
   }
 
-  getRoles() {
-    let players = this.state.players;
+  getRoles(players) {
+    let b = ["secondary", "secondary", "secondary", "secondary"];
     let roles = [[], [], [], []];
     for (let player of players) {
       roles[player[1]].push(player[0]);
@@ -38,10 +37,24 @@ class Lobby extends React.Component {
     let lists = ["", "", "", ""];
     for (let i = 0; i < roles.length; i++) {
       for (let userId of roles[i]) {
-        lists[i] += "♟️";
+        if (userId === localStorage.getItem("userId")) {
+          lists[i] += i === 0 || i === 1 ? "♔" : "♚";
+        }
+        else {
+          lists[i] += i === 2 || i === 3 ? "♙" : "♟";
+        }
+        if (lists[i].length === 1) {
+          b[i] = "success";
+        }
+        else if (lists[i].length > 1){
+          b[i] = "danger";
+        }
       }
     }
-    return lists;
+    this.setState({
+      lists: lists,
+      buttons: b
+    });
   }
 
   copy() {
@@ -52,7 +65,6 @@ class Lobby extends React.Component {
   }
 
   render() {
-    let lists = this.getRoles();
     return (
       <Container fluid className="vh-100 d-flex flex-column lobby">
         <Row className="h-25">
@@ -66,15 +78,15 @@ class Lobby extends React.Component {
             <Row>
               <Col>
                 <Row>
-                  <Col><Button size="lg" onClick={() => this.chooseRole(0)}>Brain</Button></Col>
+                  <Col><Button variant={this.state.buttons[0]} size="lg" onClick={() => this.chooseRole(0)}>Brain</Button></Col>
                 </Row>
-                <Row><Col className="piece">{lists[0]}</Col></Row>
+                <Row><Col className="piece">{this.state.lists[0]}</Col></Row>
               </Col>
               <Col>
                 <Row>
-                  <Col><Button size="lg" onClick={() => this.chooseRole(1)}>Hand</Button></Col>
+                  <Col><Button variant={this.state.buttons[1]} size="lg" onClick={() => this.chooseRole(1)}>Hand</Button></Col>
                 </Row>
-                <Row><Col className="piece">{lists[1]}</Col></Row>
+                <Row><Col className="piece">{this.state.lists[1]}</Col></Row>
               </Col>
             </Row>
           </Col>
@@ -85,15 +97,15 @@ class Lobby extends React.Component {
             <Row>
               <Col>
                 <Row>
-                  <Col><Button size="lg" onClick={() => this.chooseRole(2)}>Brain</Button></Col>
+                  <Col><Button variant={this.state.buttons[2]} size="lg" onClick={() => this.chooseRole(2)}>Brain</Button></Col>
                 </Row>
-                <Row><Col className="piece">{lists[2]}</Col></Row>
+                <Row><Col className="piece">{this.state.lists[2]}</Col></Row>
               </Col>
               <Col>
                 <Row>
-                  <Col><Button size="lg" onClick={() => this.chooseRole(3)}>Hand</Button></Col>
+                  <Col><Button variant={this.state.buttons[3]} size="lg" onClick={() => this.chooseRole(3)}>Hand</Button></Col>
                 </Row>
-                <Row><Col className="piece">{lists[3]}</Col></Row>
+                <Row><Col className="piece">{this.state.lists[3]}</Col></Row>
               </Col>
             </Row>
           </Col>
