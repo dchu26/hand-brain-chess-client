@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,6 +6,7 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Room from "./pages/Room";
+import "./App.css"
 
 class App extends React.Component {
   render() {
