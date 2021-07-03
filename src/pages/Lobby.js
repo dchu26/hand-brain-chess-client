@@ -11,7 +11,7 @@ class Lobby extends React.Component {
     super(props);
     this.state = {
       players: [],
-      buttons: ["secondary", "secondary", "secondary", "secondary"],
+      buttons: ["secondary", "secondary"],
       lists: []
     };
     this.configureSocket();
@@ -29,19 +29,19 @@ class Lobby extends React.Component {
   }
 
   getRoles(players) {
-    let b = ["secondary", "secondary", "secondary", "secondary"];
-    let roles = [[], [], [], []];
+    let b = ["secondary", "secondary"];
+    let roles = [[], []];
     for (let player of players) {
       roles[player[1]].push(player[0]);
     }
-    let lists = ["", "", "", ""];
+    let lists = ["", ""];
     for (let i = 0; i < roles.length; i++) {
       for (let userId of roles[i]) {
         if (userId === localStorage.getItem("userId")) {
-          lists[i] += i === 0 || i === 1 ? "♔" : "♚";
+          lists[i] += i === 0 ? "♔" : "♚";
         }
         else {
-          lists[i] += i === 0 || i === 1 ? "♘" : "♞";
+          lists[i] += i === 0  ? "♘" : "♞";
         }
         if (lists[i].length === 1) {
           b[i] = "success";
@@ -79,9 +79,9 @@ class Lobby extends React.Component {
 
               <Col>
                 <Row>
-                  <Col><Button variant={this.state.buttons[1]} size="lg" onClick={() => this.chooseRole(0)}>Hand</Button></Col>
+                  <Col><Button variant={this.state.buttons[0]} size="lg" onClick={() => this.chooseRole(0)}>Join</Button></Col>
                 </Row>
-                <Row><Col className="piece">{this.state.lists[1]}</Col></Row>
+                <Row><Col className="piece">{this.state.lists[0]}</Col></Row>
               </Col>
             </Row>
           </Col>
@@ -93,9 +93,9 @@ class Lobby extends React.Component {
  
               <Col>
                 <Row>
-                  <Col><Button variant={this.state.buttons[3]} size="lg" onClick={() => this.chooseRole(1)}>Hand</Button></Col>
+                  <Col><Button variant={this.state.buttons[1]} size="lg" onClick={() => this.chooseRole(1)}>Join</Button></Col>
                 </Row>
-                <Row><Col className="piece">{this.state.lists[3]}</Col></Row>
+                <Row><Col className="piece">{this.state.lists[1]}</Col></Row>
               </Col>
             </Row>
           </Col>

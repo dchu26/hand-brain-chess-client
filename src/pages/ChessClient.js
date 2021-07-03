@@ -40,7 +40,7 @@ class ChessClient extends React.Component {
     socket.on("board", boardState => {
       let squareStyles = this.getSquareStyles(boardState.squares, boardState.player, boardState.checkSquare);
       let role = this.state.role === -1 ? boardState.players.find(e => e[0] === localStorage.getItem("userId")) : this.state.role;
-      let orientation = role !== undefined && (role[1] === 2 || role[1] === 3) ? "black" : "white";
+      let orientation = role !== undefined && role[1] === 1  ? "black" : "white";
       this.setState({
         boardState: boardState,
         isConnected: true,
@@ -51,21 +51,15 @@ class ChessClient extends React.Component {
       });
     });
   }
-
+  
   toRole(role) {
     let name = "Spectator";
     switch (role) {
       case 0:
-        name = "White Brain";
+        name = "White";
         break;
       case 1:
-        name = "White Hand";
-        break;
-      case 2:
-        name = "Black Brain";
-        break;
-      case 3:
-        name = "Black Hand";
+        name = "Black";
         break;
       default:
         name = "Spectator";
@@ -76,10 +70,10 @@ class ChessClient extends React.Component {
   getSquareStyles(squares, player, checkSquare) {
     let squareStyles = {};
     let style;
-    if (player === 1 || player === 3) {
+    if (player === 1) {
       style = {backgroundColor: "plum"};
     }
-    else if (player === 0 || player === 2) {
+    else if (player === 0) {
       style = {backgroundColor: "forestgreen"};
     }
     for (let square of squares) {

@@ -26,16 +26,13 @@ class Home extends React.Component {
       <Container className="home vh-100 d-flex flex-column" fluid>
         <Row className="h-25">
           <Col>
-            <h1 className="title">Hand Brain Chess</h1>
+            <h1 className="title">Bluff Chess</h1>
           </Col>
         </Row>
         <Row>
           <Col className="rules">
             <h2>Rules</h2>
-            <p>Each team contains 2 players: 1 hand and 1 brain.</p>
-            <p>Each turn, the brain makes a move using a piece. The type of piece they chose is highlighted purple.</p>
-            <p>The team's hand must move a highlighted piece. Their move determines the actual move their side makes.</p>
-            <p>The hand and brain can't tell each other what move to make.</p>
+            <p>Normal chess but with bluffing :) </p>
           </Col>
         </Row>
         <Row>
